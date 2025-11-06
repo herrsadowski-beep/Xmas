@@ -1,16 +1,47 @@
 const STORAGE_KEY = "xmas-wishes";
 
 const selectors = {
-  form: document.querySelector("#wish-form"),
-  feedback: document.querySelector(".form-feedback"),
-  wishContainer: document.querySelector("#wish-container"),
-  wishTemplate: document.querySelector("#wish-template"),
-  wishCount: document.querySelector(".wish-count"),
-  minPrice: document.querySelector("#min-price"),
-  maxPrice: document.querySelector("#max-price"),
-  applyFilter: document.querySelector("#apply-filter"),
-  resetFilter: document.querySelector("#reset-filter"),
+  form: null,
+  feedback: null,
+  wishContainer: null,
+  wishTemplate: null,
+  wishCount: null,
+  minPrice: null,
+  maxPrice: null,
+  applyFilter: null,
+  resetFilter: null,
 };
+
+function hydrateSelectors() {
+  selectors.form = document.querySelector("#wish-form");
+  selectors.feedback = document.querySelector(".form-feedback");
+  selectors.wishContainer = document.querySelector("#wish-container");
+  selectors.wishTemplate = document.querySelector("#wish-template");
+  selectors.wishCount = document.querySelector(".wish-count");
+  selectors.minPrice = document.querySelector("#min-price");
+  selectors.maxPrice = document.querySelector("#max-price");
+  selectors.applyFilter = document.querySelector("#apply-filter");
+  selectors.resetFilter = document.querySelector("#reset-filter");
+}
+
+function ensureSelectors() {
+  const entries = Object.entries(selectors);
+  const missing = entries.filter(([, value]) => value === null);
+  if (missing.length > 0) {
+    throw new Error(
+      `Wichtige Seitenelemente wurden nicht gefunden: ${missing
+        .map(([key]) => key)
+        .join(", ")}`,
+    );
+  }
+}
+
+function createId() {
+  if (typeof window !== "undefined" && window.crypto?.randomUUID) {
+    return window.crypto.randomUUID();
+  }
+  return `wish-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+}
 
 const state = {
   wishes: [],
@@ -48,7 +79,7 @@ function persist() {
 function getSeedWishes() {
   return [
     {
-      id: crypto.randomUUID(),
+      id: createId(),
       person: "Anna",
       title: "Wollmütze in Bordeaux",
       description: "Bevorzugt handgefertigt, gerne aus Merinowolle.",
@@ -59,7 +90,7 @@ function getSeedWishes() {
       reserved: false,
     },
     {
-      id: crypto.randomUUID(),
+      id: createId(),
       person: "Jonas",
       title: "Brettspiel 'Cascadia'",
       description: "Familienspiel ab 10 Jahren, deutsche Ausgabe.",
@@ -70,7 +101,7 @@ function getSeedWishes() {
       reserved: true,
     },
     {
-      id: crypto.randomUUID(),
+      id: createId(),
       person: "Mia",
       title: "Kinderbuch 'Weihnachtswunder'",
       description: "Hardcover, gerne mit Illustrationen.",
@@ -88,7 +119,7 @@ function handleSubmit(event) {
 
   const formData = new FormData(selectors.form);
   const newWish = {
-    id: crypto.randomUUID(),
+    id: createId(),
     person: formData.get("person")?.trim(),
     title: formData.get("title")?.trim(),
     description: formData.get("description")?.trim(),
@@ -251,6 +282,13 @@ function initEvents() {
 }
 
 function init() {
+  hydrateSelectors();
+  try {
+    ensureSelectors();
+  } catch (error) {
+    console.error(error);
+    return;
+  }
   loadFromStorage();
   initEvents();
   render();
