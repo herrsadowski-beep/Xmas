@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Weihnachts-Wunschliste</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;600&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <header class="app-header">
+      <h1>Weihnachts-Wunschliste</h1>
+      <p>
+        Verwalte Wünsche für deine Liebsten, entdecke Geschenkideen und reserviere,
+        was du erfüllen möchtest.
+      </p>
+    </header>
+
+    <main class="layout">
+      <section class="card add-wish">
+        <h2>Neuen Wunsch hinzufügen</h2>
+        <form id="wish-form" novalidate>
+          <div class="form-row">
+            <label for="person">Person</label>
+            <input id="person" name="person" type="text" placeholder="z. B. Anna" required />
+          </div>
+          <div class="form-row">
+            <label for="title">Wunsch</label>
+            <input id="title" name="title" type="text" placeholder="z. B. Winterpulli" required />
+          </div>
+          <div class="form-row">
+            <label for="description">Beschreibung</label>
+            <textarea id="description" name="description" rows="3" placeholder="Farbe, Größe, Hinweise"></textarea>
+          </div>
+          <div class="form-row">
+            <label for="link">Link</label>
+            <input id="link" name="link" type="url" placeholder="https://..." />
+          </div>
+          <div class="form-row">
+            <label for="image">Bild-URL</label>
+            <input id="image" name="image" type="url" placeholder="https://..." />
+          </div>
+          <div class="form-row">
+            <label for="price">Preis (€)</label>
+            <input id="price" name="price" type="number" min="0" step="0.01" placeholder="0,00" required />
+          </div>
+          <button type="submit" class="primary-btn">Wunsch speichern</button>
+          <p class="form-feedback" role="status" aria-live="polite"></p>
+        </form>
+      </section>
+
+      <section class="card filters">
+        <h2>Preisfilter</h2>
+        <div class="filter-grid">
+          <label class="form-row">
+            <span>Min. Preis (€)</span>
+            <input id="min-price" type="number" min="0" step="0.01" placeholder="0" />
+          </label>
+          <label class="form-row">
+            <span>Max. Preis (€)</span>
+            <input id="max-price" type="number" min="0" step="0.01" placeholder="100" />
+          </label>
+        </div>
+        <div class="filter-actions">
+          <button id="apply-filter" class="secondary-btn" type="button">Filter anwenden</button>
+          <button id="reset-filter" class="text-btn" type="button">Zurücksetzen</button>
+        </div>
+      </section>
+
+      <section class="wish-list card">
+        <div class="wish-list__header">
+          <h2>Alle Wünsche</h2>
+          <p class="wish-count" aria-live="polite"></p>
+        </div>
+        <div id="wish-container" class="wish-container"></div>
+      </section>
+    </main>
+
+    <template id="wish-template">
+      <article class="wish-card" data-id="">
+        <div class="wish-card__image"></div>
+        <div class="wish-card__content">
+          <header class="wish-card__header">
+            <h3 class="wish-card__title"></h3>
+            <p class="wish-card__person"></p>
+          </header>
+          <p class="wish-card__description"></p>
+          <p class="wish-card__price"></p>
+          <div class="wish-card__links"></div>
+          <button class="reserve-btn" type="button"></button>
+        </div>
+      </article>
+    </template>
+
+    <script src="app.js" defer></script>
+  </body>
+</html>
